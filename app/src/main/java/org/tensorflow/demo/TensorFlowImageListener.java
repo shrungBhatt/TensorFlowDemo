@@ -27,6 +27,7 @@ import android.media.ImageReader;
 import android.media.ImageReader.OnImageAvailableListener;
 import android.os.Handler;
 import android.os.Trace;
+import android.widget.ImageView;
 
 import junit.framework.Assert;
 
@@ -73,10 +74,11 @@ public class TensorFlowImageListener implements OnImageAvailableListener {
 
     private RecognitionScoreView scoreView;
     private Context mContext;
+    private ImageView mAugmentedImageView;
+    private Interface_SetImage mInterfaceSetImage;
 
-
-    TensorFlowImageListener(Context context){
-        mContext = context;
+    TensorFlowImageListener(Interface_SetImage interfaceSetImage) {
+        mInterfaceSetImage = interfaceSetImage;
     }
 
     public void initialize(
@@ -200,14 +202,20 @@ public class TensorFlowImageListener implements OnImageAvailableListener {
 
 
                         LOGGER.v("%d results", results.size());
+
+
                         for (final Classifier.Recognition result : results) {
                             LOGGER.v("Result: " + result.getTitle());
+                            mInterfaceSetImage.setImage(result.getTitle());
                         }
                         scoreView.setResults(results);
+
+
                         computing = false;
                     }
                 });
 
         Trace.endSection();
     }
+
 }
